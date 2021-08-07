@@ -10,7 +10,7 @@ pattern_money = re.compile(
     r'(?<=新臺幣)[壹一貳二叁三肆四伍五陸六柒七捌八玖九拾十貮二兩佰百千仟]+(?=元)')
 
 def find_money(text: str) -> list:
-    return [cn2an.cn2an(match.group(0), 'smart') for match in pattern_money.finditer(main_text)]
+    return [cn2an.cn2an(match.group(0), 'smart') for match in pattern_money.finditer(text)]
 
 
 if __name__ == '__main__':
