@@ -15,9 +15,5 @@ if __name__ == '__main__':
 原告其餘之訴駁回。
 本判決第1 項得假執行。但被告如於執行標的物拍定、變賣或物之交付前，以新臺幣柒佰玖拾捌元預供擔保，得免為假執行。
 原告其餘假執行之聲請駁回。'''
-    # for match in pattern.finditer(main_text):
-    #     keyword = match.group(0)
-    #     dic.setdefault(keyword, 0)
-    #     dic[keyword] += 1
     for match in pattern_money.finditer(main_text):
         print(cn2an.cn2an(match.group(0), 'smart'))
