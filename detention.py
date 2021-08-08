@@ -6,10 +6,10 @@ import re
 import cn2an
 
 pattern_detention = re.compile(
-    r'(?<=拘役)[壹一貳二叁三肆四伍五陸六柒七捌八玖九拾十貮二兩佰百千仟]+(?=日)')
+    r'(?<=拘役)[壹貳叁肆伍陸柒捌玖拾貮兩佰仟]+(?=日)')
 
 def find_detention(text: str) -> list:
-    res = [cn2an.cn2an(match.group(0), 'smart') for match in pattern_detention.finditer(text)]
+    res = [cn2an.cn2an(match.group(0), 'strict') for match in pattern_detention.finditer(text)]
     if res:
         return max(res)
     return 0
