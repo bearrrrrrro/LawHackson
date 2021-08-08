@@ -6,7 +6,7 @@ import ahocorasick
 import json
 from pathlib import Path
 
-files = ['attitude.json', 'background.json', 'content.json']
+files = ['attitude.json', 'background.json', 'content.json', 'crime.json']
 
 filepaths = [Path(__file__).parent.joinpath('data').joinpath(filename) for filename in files]
 data = {}

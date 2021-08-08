@@ -42,7 +42,8 @@ if __name__ == '__main__':
 
             res = keyword_counter.count_words(text)
             row_data = dict(row_data, **res)
-            csv_data.append(row_data)
+            if max(row_data["公然侮辱罪"], row_data["誹謗罪"]) > 0:
+                csv_data.append(row_data)
         except:
             logging.error(data, exc_info=True)
             print("Error:", filename, file=sys.stderr)
