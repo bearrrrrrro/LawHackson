@@ -24,6 +24,7 @@ if __name__ == '__main__':
 
     csv_data = []
     pattern = str(Path(__file__).parent.joinpath('input').joinpath('*.json'))
+    error_count = 0
     for filename in tqdm(glob(pattern)):
         with open(filename, 'r', encoding="utf-8") as f:
             data = json.load(f)
@@ -34,7 +35,8 @@ if __name__ == '__main__':
                 'filename': os.path.basename(filename),
                 'money': money.find_money(text),
                 'detention': detention.find_detention(text),
-                'is_internet': location.is_internet(text)
+                'is_internet': location.is_internet(text),
+                'crime': data['reason'],
                 # 'address': Get_Address.GetAddress(text),
             }
 
@@ -44,8 +46,9 @@ if __name__ == '__main__':
         except:
             logging.error(data, exc_info=True)
             print("Error:", filename, file=sys.stderr)
+            error_count += 1
 
 
     # print(csv_data)
     pd.DataFrame.from_records(data=csv_data).to_csv('result.csv', index=True, encoding='utf-8')
-    print(f"Time used: {time() - start}", file=sys.stderr)
+    print(f"Time used: {time() - start}, error: {error_count}", file=sys.stderr)
