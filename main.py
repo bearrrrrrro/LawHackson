@@ -1,18 +1,22 @@
 import json
 import os
-
-from pathlib import Path
+import sys
 from glob import glob
+from pathlib import Path
+from time import time
 
 import pandas as pd
+from tqdm import tqdm
 
+import detention
 import keyword_counter
 import money
-import detention
+
 # import Get_Address
 
 
 if __name__ == '__main__':
+    start = time()
     columns = [
         'filename',
         'money',
@@ -23,7 +27,7 @@ if __name__ == '__main__':
 
     csv_data = dict((column, []) for column in columns)
     pattern = str(Path(__file__).parent.joinpath('input').joinpath('*.json'))
-    for filename in glob(pattern):
+    for filename in tqdm(glob(pattern)):
         with open(filename, 'r') as f:
             data = json.load(f)
 
@@ -40,3 +44,4 @@ if __name__ == '__main__':
 
     # print(csv_data)
     pd.DataFrame(data=csv_data).to_csv('result.csv', index=True)
+    print(f"Time used: {time() - start}", file=sys.stderr)
