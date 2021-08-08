@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
+from dotenv import dotenv_values
+
 from ArticutAPI import Articut
 from pprint import pprint
 
+config = dotenv_values('.env')
+
 #取得金鑰
-username = "cuppot123@gmail.com"
-apikey ="wpu7VsUJ*w61I1B6GhfM@acEWkOijsE"
+username = config["ARTICUT_USERNAME"]
+apikey = config["ARTICUT_PASSWORD"]
 articut = Articut(username, apikey)
 
 
