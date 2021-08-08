@@ -28,7 +28,8 @@ if __name__ == '__main__':
     ]
     columns += list(keyword_counter.get_keys())
 
-    csv_data = dict((column, []) for column in columns)
+    csv_data = []
+
     pattern = str(Path(__file__).parent.joinpath('input').joinpath('*.json'))
     for filename in tqdm(glob(pattern)):
         with open(filename, 'r', encoding="utf-8") as f:
@@ -36,20 +37,21 @@ if __name__ == '__main__':
 
         try:
             text = data['mainText'] + data['opinion']
-
-            csv_data['filename'].append(os.path.basename(filename))
-            csv_data['money'].append(money.find_money(text))
-            csv_data['detention'].append(detention.find_detention(text))
-            # csv_data['address'].append(Get_Address.GetAddress(text))
+            row_data = {
+                'filename': os.path.basename(filename),
+                'money': money.find_money(text),
+                'detention': detention.find_detention(text),
+                # 'address': Get_Address.GetAddress(text),
+            }
 
             res = keyword_counter.count_words(text)
-            for key in keyword_counter.get_keys():
-                csv_data[key].append(res[key])
+            row_data = dict(row_data, **res)
+            csv_data.append(row_data)
         except:
             logging.error(data, exc_info=True)
             print("Error:", filename, file=sys.stderr)
 
 
     # print(csv_data)
-    pd.DataFrame(data=csv_data).to_csv('result.csv', index=True, encoding='utf-8')
+    pd.DataFrame.from_records(data=csv_data).to_csv('result.csv', index=True, encoding='utf-8')
     print(f"Time used: {time() - start}", file=sys.stderr)
