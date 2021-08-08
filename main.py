@@ -1,6 +1,8 @@
 import json
 import os
 import sys
+import logging
+
 from glob import glob
 from pathlib import Path
 from time import time
@@ -16,6 +18,7 @@ import money
 
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='main.log', level=logging.DEBUG)
     start = time()
     columns = [
         'filename',
@@ -31,16 +34,21 @@ if __name__ == '__main__':
         with open(filename, 'r', encoding="utf-8") as f:
             data = json.load(f)
 
-        text = data['mainText'] + data['opinion']
+        try:
+            text = data['mainText'] + data['opinion']
 
-        csv_data['filename'].append(os.path.basename(filename))
-        csv_data['money'].append(money.find_money(text))
-        csv_data['detention'].append(detention.find_detention(text))
-        # csv_data['address'].append(Get_Address.GetAddress(text))
+            csv_data['filename'].append(os.path.basename(filename))
+            csv_data['money'].append(money.find_money(text))
+            csv_data['detention'].append(detention.find_detention(text))
+            # csv_data['address'].append(Get_Address.GetAddress(text))
 
-        res = keyword_counter.count_words(text)
-        for key in keyword_counter.get_keys():
-            csv_data[key].append(res[key])
+            res = keyword_counter.count_words(text)
+            for key in keyword_counter.get_keys():
+                csv_data[key].append(res[key])
+        except:
+            logging.error(data, exc_info=True)
+            print("Error:", filename, file=sys.stderr)
+
 
     # print(csv_data)
     pd.DataFrame(data=csv_data).to_csv('result.csv', index=True, encoding='utf-8')
