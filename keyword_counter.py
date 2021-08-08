@@ -6,9 +6,13 @@ import ahocorasick
 import json
 from pathlib import Path
 
-filename = Path(__file__).parent.joinpath('data').joinpath('content.json')
-with open(filename, mode='r', encoding='utf-8') as jsonfile:
-    data = json.load(jsonfile)
+files = ['attitude.json', 'background.json', 'content.json']
+
+filepaths = [Path(__file__).parent.joinpath('data').joinpath(filename) for filename in files]
+data = {}
+for filepath in filepaths:
+    with open(filepath, mode='r', encoding='utf-8') as jsonfile:
+        data = dict(json.load(jsonfile), **data)
 
 automaton = ahocorasick.Automaton()
 idx = 0
