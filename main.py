@@ -43,5 +43,5 @@ if __name__ == '__main__':
             csv_data[key].append(res[key])
 
     # print(csv_data)
-    pd.DataFrame(data=csv_data).to_csv('result.csv', index=True)
+    pd.DataFrame(data=csv_data).to_csv('result.csv', index=True, encoding='utf8')
     print(f"Time used: {time() - start}", file=sys.stderr)
