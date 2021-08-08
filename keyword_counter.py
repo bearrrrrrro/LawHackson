@@ -12,18 +12,23 @@ with open(filename, mode='r', encoding='utf-8') as jsonfile:
 
 automaton = ahocorasick.Automaton()
 idx = 0
+empty_dict = {}
 for key, value in data.items():
     for word in value:
         automaton.add_word(word, (idx, word, key))
+        empty_dict[key] = 0
         idx += 1
 
 automaton.make_automaton()
 
 
+def get_keys():
+    return empty_dict.keys()
+
+
 def count_words(text: str) -> dict:
-    dic = {}
+    dic = empty_dict.copy()
     for _, (_, _, keyword) in automaton.iter(text):
-        dic.setdefault(keyword, 0)
         dic[keyword] += 1
     return dic
 
@@ -34,3 +39,4 @@ if __name__ == '__main__':
         start_index = end_index - len(original_value) + 1
         print((start_index, end_index, (insert_order, original_value, key)))
         assert haystack[start_index:start_index + len(original_value)] == original_value
+    print(count_words(haystack))
