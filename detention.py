@@ -9,7 +9,7 @@ pattern_detention = re.compile(
     r'(?<=拘役)[壹貳叁肆伍陸柒捌玖拾貮兩佰仟]+(?=日)')
 
 def find_detention(text: str) -> list:
-    res = [cn2an.cn2an(match.group(0), 'strict') for match in pattern_detention.finditer(text)]
+    res = [cn2an.cn2an(match.group(0), 'strict').replace('貳', '二').replace('陸', '六') for match in pattern_detention.finditer(text)]
     if res:
         return max(res)
     return 0
