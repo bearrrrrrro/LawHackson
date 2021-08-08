@@ -34,7 +34,7 @@ if __name__ == '__main__':
                 'filename': os.path.basename(filename),
                 'money': money.find_money(text),
                 'detention': detention.find_detention(text),
-                'location': location.is_internet(text)
+                'is_internet': location.is_internet(text)
                 # 'address': Get_Address.GetAddress(text),
             }
 
