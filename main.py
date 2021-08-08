@@ -13,6 +13,7 @@ from tqdm import tqdm
 import detention
 import keyword_counter
 import money
+import location
 
 # import Get_Address
 
@@ -20,16 +21,8 @@ import money
 if __name__ == '__main__':
     logging.basicConfig(filename='main.log', level=logging.DEBUG)
     start = time()
-    columns = [
-        'filename',
-        'money',
-        'detention',
-        # 'address'
-    ]
-    columns += list(keyword_counter.get_keys())
 
     csv_data = []
-
     pattern = str(Path(__file__).parent.joinpath('input').joinpath('*.json'))
     for filename in tqdm(glob(pattern)):
         with open(filename, 'r', encoding="utf-8") as f:
@@ -41,6 +34,7 @@ if __name__ == '__main__':
                 'filename': os.path.basename(filename),
                 'money': money.find_money(text),
                 'detention': detention.find_detention(text),
+                'location': location.is_internet(text)
                 # 'address': Get_Address.GetAddress(text),
             }
 
