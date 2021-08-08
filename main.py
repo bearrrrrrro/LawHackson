@@ -28,7 +28,7 @@ if __name__ == '__main__':
     csv_data = dict((column, []) for column in columns)
     pattern = str(Path(__file__).parent.joinpath('input').joinpath('*.json'))
     for filename in tqdm(glob(pattern)):
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding="utf-8") as f:
             data = json.load(f)
 
         text = data['mainText'] + data['opinion']
@@ -43,5 +43,5 @@ if __name__ == '__main__':
             csv_data[key].append(res[key])
 
     # print(csv_data)
-    pd.DataFrame(data=csv_data).to_csv('result.csv', index=True, encoding='utf8')
+    pd.DataFrame(data=csv_data).to_csv('result.csv', index=True, encoding='utf-8')
     print(f"Time used: {time() - start}", file=sys.stderr)
