@@ -33,7 +33,7 @@ def get_keys():
 def count_words(text: str) -> dict:
     dic = empty_dict.copy()
     for _, (_, _, keyword) in automaton.iter(text):
-        dic[keyword] += 1
+        dic[keyword] = 1
     return dic
 
 
