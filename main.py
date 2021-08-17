@@ -14,8 +14,6 @@ import keyword_counter
 import location
 import money
 
-# import Get_Address
-
 
 def _output_money(df: pd.DataFrame, filename: str) -> pd.DataFrame:
     result = df.drop(columns=['detention'])
