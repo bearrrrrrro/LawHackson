@@ -17,16 +17,14 @@ import money
 # import Get_Address
 
 
-def _output_money(df: pd.DataFrame, filename: str) -> None:
+def _output_money(df: pd.DataFrame, filename: str) -> pd.DataFrame:
     result = df.drop(columns=['detention'])
-    result[result['money'] > 0].to_csv(
-        f'{filename}_with_money.csv', index=True, encoding='utf-8')
+    return result[result['money'] > 0]
 
 
-def _output_detention(df: pd.DataFrame, filename: str) -> None:
+def _output_detention(df: pd.DataFrame, filename: str) -> pd.DataFrame:
     result = df.drop(columns=['money'])
-    result[result['detention'] > 0].to_csv(
-        f'{filename}_with_detention.csv', index=True, encoding='utf-8')
+    return result[result['detention'] > 0]
 
 
 def _run(index, judge_path):
@@ -58,15 +56,24 @@ def _run(index, judge_path):
             error_count += 1
 
     result = pd.DataFrame.from_records(data=csv_data)
-    _output_money(result, judge_path.name)
-    _output_detention(result, judge_path.name)
-    print(f"{judge_path.name} Time used: {time() - start}, error: {error_count}", file=sys.stderr)
+    result['source'] = judge_path.name
+    money_df = _output_money(result, judge_path.name)
+    detention_df = _output_detention(result, judge_path.name)
+    print(f"Error: {error_count}", file=sys.stderr)
+    return money_df, detention_df
 
 
 if __name__ == '__main__':
     logging.basicConfig(filename='main.log', level=logging.DEBUG)
-    start = time()
+    start_time = time()
 
-    with Pool(cpu_count() - 1) as pool:
+    with Pool(cpu_count()) as pool:
         args = list(enumerate(Path(__file__).parent.joinpath('input').iterdir()))
-        pool.starmap(_run, args)
+        money_concat = []
+        detention_concat = []
+        for money_df, detention_df in pool.starmap(_run, args):
+            money_concat.append(money_df)
+            detention_concat.append(detention_df)
+        pd.concat(money_concat).to_csv('money.csv', index=False,  encoding='utf-8')
+        pd.concat(detention_concat).to_csv('detention.csv', index=False,  encoding='utf-8')
+    print(f'Total time used: {(time() - start_time):.2f} sec', file=sys.stderr)
