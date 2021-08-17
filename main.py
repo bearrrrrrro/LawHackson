@@ -8,6 +8,7 @@ from time import time
 
 import pandas as pd
 from tqdm import tqdm
+from multiprocessing import Pool, cpu_count
 
 import detention
 import keyword_counter
@@ -29,11 +30,12 @@ def _output_detention(df: pd.DataFrame, filename: str) -> None:
         f'{filename}_with_detention.csv', index=True, encoding='utf-8')
 
 
-def _run(judge_path):
-    print(f'Processing {judge_path.name} ...', file=sys.stderr)
+def _run(index, judge_path):
     error_count = 0
     csv_data = []
-    for filename in tqdm(list(judge_path.iterdir())):
+    pbar = tqdm(list(judge_path.iterdir()), position=index)
+    pbar.set_description(judge_path.name)
+    for filename in pbar:
         with open(filename, 'r', encoding="utf-8") as f:
             data = json.load(f)
 
@@ -59,12 +61,13 @@ def _run(judge_path):
     result = pd.DataFrame.from_records(data=csv_data)
     _output_money(result, judge_path.name)
     _output_detention(result, judge_path.name)
-    print(f"Time used: {time() - start}, error: {error_count}", file=sys.stderr)
+    print(f"{judge_path.name} Time used: {time() - start}, error: {error_count}", file=sys.stderr)
 
 
 if __name__ == '__main__':
     logging.basicConfig(filename='main.log', level=logging.DEBUG)
     start = time()
 
-    for judge_path in Path(__file__).parent.joinpath('input').iterdir():
-        _run(judge_path)
+    with Pool(cpu_count() - 1) as pool:
+        args = list(enumerate(Path(__file__).parent.joinpath('input').iterdir()))
+        pool.starmap(_run, args)
