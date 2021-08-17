@@ -62,6 +62,9 @@ def _run(index, judge_path):
 
 
 if __name__ == '__main__':
+    if os.path.isfile('money.csv') or os.path.isfile('detention.csv'):
+        print("Please remove the previous results first.", file=sys.stderr)
+        exit(-1)
     logging.basicConfig(filename='main.log', level=logging.DEBUG)
     start_time = time()
 
