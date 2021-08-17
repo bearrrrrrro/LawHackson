@@ -1,19 +1,18 @@
 import json
+import logging
 import os
 import sys
-import logging
-
+from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from time import time
 
 import pandas as pd
 from tqdm import tqdm
-from multiprocessing import Pool, cpu_count
 
 import detention
 import keyword_counter
-import money
 import location
+import money
 
 # import Get_Address
 
