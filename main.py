@@ -66,5 +66,5 @@ if __name__ == '__main__':
     logging.basicConfig(filename='main.log', level=logging.DEBUG)
     start = time()
 
-    for judge_path in Path(__file__).parent.joinpath('json').iterdir():
+    for judge_path in Path(__file__).parent.joinpath('input').iterdir():
         _run(judge_path)
