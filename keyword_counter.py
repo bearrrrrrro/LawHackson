@@ -26,7 +26,7 @@ for key, value in data.items():
 
 automaton.make_automaton()
 
-neg = re.compile(r'(未|否|不|未能)$')
+neg = re.compile(r'(未|否|不|未能|未曾|無)$')
 
 
 def get_keys():
