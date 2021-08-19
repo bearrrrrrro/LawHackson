@@ -5,6 +5,7 @@ Improved keyword counter using AC-automata
 import ahocorasick
 import json
 from pathlib import Path
+import re
 
 files = ['attitude.json', 'background.json', 'content.json', 'crime.json']
 
@@ -25,6 +26,8 @@ for key, value in data.items():
 
 automaton.make_automaton()
 
+neg = re.compile(r'(未|否|不|未能)$')
+
 
 def get_keys():
     return empty_dict.keys()
@@ -32,15 +35,13 @@ def get_keys():
 
 def count_words(text: str) -> dict:
     dic = empty_dict.copy()
-    for _, (_, _, keyword) in automaton.iter(text):
-        dic[keyword] = 1
+    for end_index, (_, original_value, keyword) in automaton.iter(text):
+        start_index = end_index - len(original_value) + 1
+        if not neg.match(text[max(start_index - 2, 0): start_index]):
+            dic[keyword] = 1
     return dic
 
 
 if __name__ == '__main__':
-    haystack = '幹你娘勒我學他那種機掰個性，說那種機掰懶叫話幹你娘雞掰勒幹你娘勒你吃洨（閩南語，泛指精液）也沒有人要看你知道幹你娘幹你娘你連屁都不如嘛，你什麼洨'
-    for end_index, (insert_order, original_value, key) in automaton.iter(haystack):
-        start_index = end_index - len(original_value) + 1
-        print((start_index, end_index, (insert_order, original_value, key)))
-        assert haystack[start_index:start_index + len(original_value)] == original_value
+    haystack = '不公然侮辱罪幹你娘勒我學他那種機掰個性，說那種機掰懶叫話幹你娘雞掰勒幹你娘勒你吃洨（閩南語，泛指精液）也沒有人要看你知道幹你娘幹你娘你連屁都不如嘛，你什麼洨'
     print(count_words(haystack))
