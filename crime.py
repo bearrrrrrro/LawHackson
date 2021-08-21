@@ -20,7 +20,7 @@ def get_crime_data(text: str) -> dict:
     if len(matches) != 1:
         return None
     data = matches[0].groupdict()
-    data['recidivism'] = data['recidivism'] is None
+    data['recidivism'] = 0 if data['recidivism'] is None else 1
     for key in ['detention', 'money']:
         data[key] = 0 if data[key] is None else cn2an.cn2an(_cn2an_preprocess(data[key]), 'strict')
     data['detention_and_money'] = data['detention'] * 1000 + data['money']

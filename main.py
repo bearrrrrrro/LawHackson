@@ -34,7 +34,7 @@ def _run(index, judge_path):
             text = data['mainText'] + data['opinion']
             row_data = {
                 'filename': os.path.basename(filename),
-                'is_internet': location.is_internet(text),
+                'is_internet': 1 if location.is_internet(text) else 0,
                 'reason': data['reason']
                 # 'address': Get_Address.GetAddress(text),
             }
