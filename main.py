@@ -20,6 +20,8 @@ def _run(index, judge_path):
     pbar = tqdm(list(judge_path.iterdir()), position=index)
     pbar.set_description(judge_path.name)
     for filename in pbar:
+        if filename.suffix != '.json':
+            continue
         with open(filename, 'r', encoding="utf-8") as f:
             data = json.load(f)
         # 過濾罪名
