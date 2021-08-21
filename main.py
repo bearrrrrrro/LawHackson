@@ -13,6 +13,7 @@ import detention
 import keyword_counter
 import location
 import money
+import crime
 
 
 def _run(index, judge_path):
@@ -24,14 +25,14 @@ def _run(index, judge_path):
         with open(filename, 'r', encoding="utf-8") as f:
             data = json.load(f)
         # 過濾罪名
-        if data['reason'].find('公然侮辱') == -1:
-            continue
         try:
+            if not crime.find_crime(data['mainText']):
+                continue
             text = data['mainText'] + data['opinion']
             row_data = {
                 'filename': os.path.basename(filename),
-                'money': money.find_money(text),
-                'detention': detention.find_detention(text),
+                'money': money.find_money(data['mainText']),
+                'detention': detention.find_detention(data['mainText']),
                 'is_internet': location.is_internet(text),
                 'crime': data['reason']
                 # 'address': Get_Address.GetAddress(text),
