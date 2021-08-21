@@ -15,6 +15,8 @@ import location
 
 
 def _run(index, judge_path):
+    if not judge_path.is_dir():
+        return
     error_count = 0
     csv_data = []
     pbar = tqdm(list(judge_path.iterdir()), position=index)
@@ -65,5 +67,5 @@ if __name__ == '__main__':
 
     with Pool(cpu_count()) as pool:
         args = list(enumerate(Path(__file__).parent.joinpath('input').iterdir()))
-        pd.concat(pool.starmap(_run, args)).to_csv('result.csv', index=False, encoding='utf-8')
+        pd.concat(df for df  in pool.starmap(_run, args) if df is not None).to_csv('result.csv', index=False, encoding='utf-8')
     print(f'Total time used: {(time() - start_time):.2f} sec', file=sys.stderr)
