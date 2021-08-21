@@ -49,13 +49,16 @@ def _run(index, judge_path):
     result = pd.DataFrame.from_records(data=csv_data)
     result['來源'] = judge_path.name
     print(f"Error: {error_count}", file=sys.stderr)
-    result = result[result['detention_and_money'] > 0]
+    try:
+        result = result[result['detention_and_money'] > 0]
 
-    # reorder columns
-    cols = result.columns.tolist()
-    cols = cols[:1] + cols[-1:] + cols[1:-1]
-    result = result[cols]
-    return result
+        # reorder columns
+        cols = result.columns.tolist()
+        cols = cols[:1] + cols[-1:] + cols[1:-1]
+        result = result[cols]
+        return result
+    except:
+        return
 
 
 if __name__ == '__main__':
@@ -67,5 +70,5 @@ if __name__ == '__main__':
 
     with Pool(cpu_count()) as pool:
         args = list(enumerate(Path(__file__).parent.joinpath('input').iterdir()))
-        pd.concat(df for df  in pool.starmap(_run, args) if df is not None).to_csv('result.csv', index=False, encoding='utf-8')
+        pd.concat(df for df  in pool.starmap(_run, args) if df is not None and not df.empty).to_csv('result.csv', index=False, encoding='utf-8')
     print(f'Total time used: {(time() - start_time):.2f} sec', file=sys.stderr)
