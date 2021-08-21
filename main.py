@@ -9,11 +9,9 @@ from time import time
 import pandas as pd
 from tqdm import tqdm
 
-import detention
+import crime
 import keyword_counter
 import location
-import money
-import crime
 
 
 def _run(index, judge_path):
@@ -26,20 +24,19 @@ def _run(index, judge_path):
             data = json.load(f)
         # 過濾罪名
         try:
-            if not crime.find_crime(data['mainText']):
+            crime_data = crime.get_crime_data(data['mainText'])
+            if crime_data is None:
                 continue
             text = data['mainText'] + data['opinion']
             row_data = {
                 'filename': os.path.basename(filename),
-                'money': money.find_money(data['mainText']),
-                'detention': detention.find_detention(data['mainText']),
                 'is_internet': location.is_internet(text),
-                'crime': data['reason']
+                'reason': data['reason']
                 # 'address': Get_Address.GetAddress(text),
             }
 
             res = keyword_counter.count_words(text)
-            row_data = dict(row_data, **res)
+            row_data = dict(row_data, **crime_data, **res)
             csv_data.append(row_data)
         except:
             logging.error(data, exc_info=True)
@@ -47,13 +44,12 @@ def _run(index, judge_path):
 
     result = pd.DataFrame.from_records(data=csv_data)
     result['來源'] = judge_path.name
-    result['拘役罰金加總'] = result['money'] + result['detention'] * 1000
     print(f"Error: {error_count}", file=sys.stderr)
-    result = result[result['拘役罰金加總'] > 0]
+    result = result[result['detention_and_money'] > 0]
 
     # reorder columns
     cols = result.columns.tolist()
-    cols = cols[:1] + cols[-2:] + cols[1:-2]
+    cols = cols[:1] + cols[-1:] + cols[1:-1]
     result = result[cols]
     return result
 
