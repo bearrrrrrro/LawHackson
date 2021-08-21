@@ -31,8 +31,4 @@
 
 2. 執行 `python main.py`
 3. 等一下，我還不知道要等多久，應該很快拉
-4. 輸出的檔案在 `money.csv` 和 `detention.csv`
-
-## 其他
-
-現在 get_address 好像還需要調整，我就沒放進 `main.py` 了。
+4. 輸出的檔案在 `result.csv`
