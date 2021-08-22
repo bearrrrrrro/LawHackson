@@ -5,6 +5,7 @@ import sys
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from time import time
+import re
 
 import pandas as pd
 from tqdm import tqdm
@@ -12,6 +13,7 @@ from tqdm import tqdm
 import crime
 import keyword_counter
 import location
+import preprocess
 
 
 def _run(index, judge_path):
@@ -31,12 +33,11 @@ def _run(index, judge_path):
             crime_data = crime.get_crime_data(data['mainText'])
             if crime_data is None:
                 continue
-            text = data['mainText'] + data['opinion']
+            text = preprocess.text_preprocess(data['judgement'] + data['opinion'])
             row_data = {
                 'filename': os.path.basename(filename),
                 'is_internet': 1 if location.is_internet(text) else 0,
                 'reason': data['reason']
-                # 'address': Get_Address.GetAddress(text),
             }
 
             res = keyword_counter.count_words(text)
