@@ -13,6 +13,7 @@ from tqdm import tqdm
 import crime
 import keyword_counter
 import location
+import judge
 import preprocess
 
 
@@ -41,7 +42,8 @@ def _run(index, judge_path):
             }
 
             res = keyword_counter.count_words(text)
-            row_data = dict(row_data, **crime_data, **res)
+            jud = judge.get_judge(data['mainText'])
+            row_data = dict(row_data, **jud, **crime_data, **res)
             csv_data.append(row_data)
         except:
             logging.error(data, exc_info=True)
