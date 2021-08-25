@@ -14,6 +14,8 @@ def get_judge(text: str) -> dict:
     ret = {"presiding": "", "judge1": "", "judge2": "", "judge3": "", "judge4": ""}
     idx = 1
     for match in pattern.finditer(text):
+        if idx == 5:
+            break
         data = match.groupdict()
         if data["presiding"] is not None:
             ret["presiding"] = data["judge"]
