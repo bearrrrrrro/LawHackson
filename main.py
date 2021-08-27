@@ -42,7 +42,7 @@ def _run(index, judge_path):
             }
 
             res = keyword_counter.count_words(text)
-            jud = judge.get_judge(data['mainText'])
+            jud = judge.get_judge(data['judgement'])
             row_data = dict(row_data, **jud, **crime_data, **res)
             csv_data.append(row_data)
         except:
