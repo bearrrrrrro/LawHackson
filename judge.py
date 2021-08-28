@@ -32,23 +32,23 @@ def get_judge(text: str) -> dict:
         data = match.groupdict()
         if data["presiding"] is not None:
             if data["presiding"] in dataMinJg:
-                ret["presiding"] = 1
+                ret["presiding"] = dataMinJg[data["presiding"]]
             elif data["presiding"] in dataMidJg:
-                ret["presiding"] = 2
+                ret["presiding"] = dataMidJg[data["presiding"]]
             elif data["presiding"] in dataLarJg:
-                ret["presiding"] = 3
+                ret["presiding"] = dataLarJg[data["presiding"]]
             else:
-                ret["presiding"] = 0
+                ret["presiding"] = -1
             #ret["presiding"] = data["judge"]
         else: 
             if data["judge"] in dataMinJg:
-                ret[f"judge{idx}"] = 1
+                ret[f"judge{idx}"] = dataMinJg[data["judge"]]
             elif data["judge"] in dataMidJg:
-                ret[f"judge{idx}"] = 2
+                ret[f"judge{idx}"] = dataMidJg[data["judge"]]
             elif data["judge"] in dataLarJg:
-                ret[f"judge{idx}"] = 3
+                ret[f"judge{idx}"] = dataLarJg[data["judge"]]
             else:
-                ret[f"judge{idx}"] = 0
+                ret[f"judge{idx}"] = -1
             #ret[f"judge{idx}"] = data["judge"]
             idx += 1
     return ret
